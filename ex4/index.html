@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>HW#2 - Console 聖誕樹練習</title>
+</head>
+<body>
+    <h1>請開啟開發者工具 (F12) 查看 Console 內容</h1>
+
+    <script>
+        function tree(n) {
+            printTreeTop(n);
+            printTreeBottom(n);
+        }
+
+        function printTreeTop(n) {
+            for (let i = 1; i <= n; i++) {
+
+                let spaces = repeatchar(n - i, ' ');
+                let stars = repeatchar(2 * i - 1, '*');
+                console.log(spaces + stars);
+            }
+        }
+
+    
+        function printTreeBottom(n) {
+            for (let i = 0; i < 3; i++) {
+                let spaces = repeatchar(n - 1, ' ');
+                console.log(spaces + '*');
+            }
+        }
+
+        function repeatchar(count, arg_char) {
+            let result = "";
+            for (let i = 0; i < count; i++) {
+                result += arg_char;
+            }
+            return result;
+        }
+
+        tree(4);
+    </script>
+</body>
+</html>
