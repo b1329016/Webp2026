@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ex#7 打字練習進階版 (懲罰機制)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* 讓顯示文字的容器看起來更像一個練習區 */
+        #container {
+            font-size: 3.5rem;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 5px;
+            outline: none; /* 移除點擊時的藍色外框 */
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5 text-center">
+        <h1 class="mb-4">打字挑戰 ex#7</h1>
+        <p class="lead">連續打錯 3 次會觸發懲罰（額外增加 3 個字）！</p>
+        <p class="text-secondary">按 <strong>Esc</strong> 可以重置遊戲</p>
+
+        <div id="container" tabindex="0" class="border shadow-sm rounded bg-white my-4 p-4">
+        </div>
+
+        <div class="mt-4">
+            <small class="text-muted">請點擊上方白色區塊後開始輸入</small>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
