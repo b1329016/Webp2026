@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajax 景點觀光展覽資訊</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding: 30px; }
+        th { background-color: #00a86b; color: white; }
+    </style>
+</head>
+<body>
+
+    <h2 class="mb-4">景點觀光展覽資訊</h2>
+
+    <table id="csie" class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>名稱</th>
+                <th>地點</th>
+                <th>票價</th>
+            </tr>
+        </thead>
+        <tbody>
+            </tbody>
+    </table>
+
+    <button class="btn btn-danger mt-3" onclick="deleteRowByRow()">一行一行刪除</button>
+
+    <script>
+        // 1. 設定 API 網址
+        var openUrl = "https://cloud.culture.tw/frontsite/trans/SearchShowAction.do?method=doFindTypeJ&category=6";
+        
+        // 2. 使用 XMLHttpRequest 抓取資料 (Ajax)
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', openUrl, true);
+        xhr.send();
+
+        xhr.onreadystatechange = function() {
+            // 當請求完成 (4) 且成功 (200) 時處理資料
+            if (this.readyState == 4 && this.status == 200) {
+                var dataset = JSON.parse(this.responseText);
+                addNewData(dataset);
+            }
+        };
+
+        // 3. 渲染資料到表格中
+        function addNewData(dataset) {
+            var myTable = document.getElementById("csie");
+            
+            dataset.forEach(function(data) {
+                // 插入新行到表格末尾
+                var row = myTable.insertRow(-1);
+                
+                // 插入資料格：名稱、地點、票價
+                row.insertCell(0).innerHTML = data['title'];
+                
+                // 判斷是否有地點與票價資訊，避免程式出錯
+                var info = data['showInfo'][0];
+                row.insertCell(1).innerHTML = info ? info['location'] : "無地點資訊";
+                row.insertCell(2).innerHTML = info ? info['price'] : "無票價資訊";
+            });
+        }
+
+        // 4. 實作「一行一行刪除」的功能
+        function deleteRowByRow() {
+            var myTable = document.getElementById("csie");
+            var rowCount = myTable.rows.length;
+
+            // 檢查是否只剩下標題列 (index 0)
+            if (rowCount > 1) {
+                // 刪除最後一行 (index = rowCount - 1)
+                myTable.deleteRow(rowCount - 1);
+            } else {
+                alert("表格資料已全數刪除！");
+            }
+        }
+    </script>
+</body>
+</html>
