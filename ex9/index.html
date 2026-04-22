@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab#9 Flickr 幾何黑白照片牆 (復刻版)</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; background-color: #f4f4f4; }
+        
+        h2 { color: #333; margin-bottom: 15px; }
+
+        button { padding: 10px 20px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 5px; font-size: 16px; margin-bottom: 20px; }
+        button:hover { background-color: #0056b3; }
+
+        /* 1. 照片牆容器 (3欄 x 3列 的 Grid) */
+        .gallery {
+            --g: 8px; /* 間隙寬度 */
+            display: grid;
+            width: 800px; /* 固定寬度以保持排版精準 */
+            aspect-ratio: 1.5; /* 調整比例以符合簡報樣子 */
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: var(--g);
+            margin-top: 20px;
+        }
+
+        /* 圖片基本樣式：黑白濾鏡、object-fit: cover 確保不變形 */
+        .gallery img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%); /* 配合最後一張圖的風格 */
+            transition: .5s;
+            border-radius: 4px;
+        }
+
+        .gallery img:hover {
+            filter: grayscale(0); /* 滑鼠移上去時顯示彩色 */
+        }
+
+        /* 2. 核心排版技巧：復刻最後一張圖的幾何切割 (Page 19 形式) */
+
+        /* 第 2 張：中間偏右上的大圖 (跨 2x2 格並斜切) */
+        .gallery img:nth-child(2) {
+            grid-area: 1 / 2 / span 2 / span 2;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, calc(50% + var(--g)/4) 100%, 0 calc(50% - var(--g)/4));
+        }
+
+        /* 第 3 張：中間偏左下的大圖 (跨 2x2 格並斜切) */
+        .gallery img:nth-child(3) {
+            grid-area: 2 / 1 / span 2 / span 2;
+            clip-path: polygon(0 0, calc(50% - var(--g)/4) 0, 100% calc(50% + var(--g)/4), 100% 100%, 0 100%);
+        }
+
+    </style>
+</head>
+<body>
+
+    <h2>Ajax Example - 照片牆</h2>
+    <button onclick="getimg()">Get IMG</button>
+    
+    <div id="gallery" class="gallery"></div>
+
+    <script>
+        // 設定 API 網址， per_page=5 剛好填充 5 個幾何格
+        const apiKey = 'ca370d51a054836007519a00ff4ce59e';
+        const dataUrl = `https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=${apiKey}&per_page=5&format=json&nojsoncallback=1`;
+
+        function getimg() {
+            const gal = document.getElementById("gallery");
+            gal.innerHTML = ""; // 清空舊內容
+
+            // 使用 XMLHttpRequest 抓取資料 (Ajax)
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', dataUrl, true);
+            xhr.send();
+
+            xhr.onload = function() {
+                if (this.status == 200) {
+                    // 抓取成功，解析 JSON
+                    const data = JSON.parse(this.responseText);
+                    const photos = data.photos.photo;
+
+                    // 遍歷這 5 張照片
+                    photos.forEach(photo => {
+                        // 根據 ID 取得圖片檔案網址 (flickr.photos.getSizes)
+                        fetchPhotoSize(photo.id);
+                    });
+                } else if (this.status == 403) {
+                    alert("簡報中的 API Key 流量已爆，請使用備用 JSON 模式。");
+                }
+            };
+        }
+
+        function fetchPhotoSize(photoId) {
+            // 抓取不同尺寸網址
+            const img_Url = `https://api.flickr.com/services/rest/?method=flickr.photos.getSizes&api_key=${apiKey}&photo_id=${photoId}&format=json&nojsoncallback=1`;
+
+            const xhrSize = new XMLHttpRequest();
+            xhrSize.open('GET', img_Url, true);
+            xhrSize.send();
+
+            xhrSize.onload = function() {
+                if (this.status == 200) {
+                    const sizeData = JSON.parse(this.responseText);
+                    const sizes = sizeData.sizes.size;
+                    // 取 Medium 或 Large 尺寸的連結 (通常是倒數第 4 個)
+                    const imgSource = sizes[Math.min(sizes.length - 1, 4)].source;
+                    
+                    add_to_gallery(imgSource);
+                }
+            };
+        }
+
+        function add_to_gallery(src) {
+            const gal = document.getElementById("gallery");
+            const img = document.createElement("img");
+            img.setAttribute("src", src);
+            gal.appendChild(img);
+        }
+    </script>
+</body>
+</html>
