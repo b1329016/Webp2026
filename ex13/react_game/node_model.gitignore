@@ -1,0 +1,20 @@
+# 1. 忽略最肥大的相依套件資料夾 
+node_modules/
+/.vite
+/dist
+
+# 2. 忽略開發環境的密碼與金鑰設定檔 (保護隱私)
+.env
+.env.local
+.env.development.local
+.env.production.local
+
+# 3. 忽略系統產生的暫存垃圾檔
+.DS_Store
+Thumbs.db
+*.local
+
+# 4. 忽略編譯後的日誌檔案
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
