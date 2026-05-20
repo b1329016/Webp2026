@@ -1,0 +1,88 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f7f9fa;
+  display: flex;
+  justify-content: center;
+  padding-top: 50px;
+}
+
+.game-container {
+  text-align: center;
+}
+
+.game-title {
+  color: #2c3e50;
+  margin-bottom: 30px;
+}
+
+.game {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 50px;
+}
+
+.status {
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #16a085;
+}
+
+.board-row {
+  display: flex;
+}
+
+/* 核心：把按鈕做成正方形格子 */
+.square {
+  background: #fff;
+  border: 2px solid #bdc3c7;
+  font-size: 2rem;
+  font-weight: bold;
+  line-height: 34px;
+  height: 80px;
+  width: 80px;
+  margin-right: -2px;
+  margin-top: -2px;
+  padding: 0;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.square:hover {
+  background: #ecf0f1;
+}
+
+.square:focus {
+  outline: none;
+}
+
+.game-info {
+  text-align: left;
+}
+
+.game-info h3 {
+  margin-top: 0;
+  color: #34495e;
+}
+
+.game-info ol {
+  padding-left: 20px;
+}
+
+.history-btn {
+  margin-bottom: 8px;
+  padding: 5px 10px;
+  border: 1px solid #dcdde1;
+  background-color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.history-btn:hover {
+  background-color: #3498db;
+  color: white;
+  border-color: #2980b9;
+}
